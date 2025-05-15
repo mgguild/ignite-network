@@ -1,6 +1,7 @@
 export const data = [
     {
         asset: 'HYPE',
+        id: 'hyperliquid',
         price: '$23.15',
         tvl: '$1,031,020,486.33',
         apy: '2.31%',
@@ -10,6 +11,7 @@ export const data = [
     },
     {
         asset: 'TRX',
+        id: 'tron',
         price: '$0.26',
         tvl: '$231,341,492.66',
         apy: '4.65%',
@@ -19,6 +21,7 @@ export const data = [
     },
     {
         asset: 'SOL',
+        id: 'solana',
         price: '$1,800.00',
         tvl: '$1,200,000,000.00',
         apy: '3.50%',
@@ -28,6 +31,7 @@ export const data = [
     },
     {
         asset: 'ATOM',
+        id: 'cosmos',
         price: '$300.00',
         tvl: '$500,000,000.00',
         apy: '5.00%',
@@ -37,6 +41,7 @@ export const data = [
     },
      {
         asset: 'TIA',
+        id: 'celestia',
         price: '$300.00',
         tvl: '$500,000,000.00',
         apy: '5.00%',
@@ -45,7 +50,8 @@ export const data = [
         ecosystem: 'Binance Smart Chain',
     },
     {
-        asset: 'ROM',
+        asset: 'RON',
+        id: 'ronin',
         price: '$300.00',
         tvl: '$500,000,000.00',
         apy: '5.00%',
@@ -55,6 +61,7 @@ export const data = [
     },
     {
         asset: 'APT',
+        id: 'aptos',
         price: '$300.00',
         tvl: '$500,000,000.00',
         apy: '5.00%',
@@ -64,6 +71,7 @@ export const data = [
     },
     {
         asset: 'DYDX',
+        id: 'dydx-chain',
         price: '$300.00',
         tvl: '$500,000,000.00',
         apy: '5.00%',
@@ -73,6 +81,7 @@ export const data = [
     },
     {
         asset: 'STRK',
+        id: 'starknet',
         price: '$300.00',
         tvl: '$500,000,000.00',
         apy: '5.00%',
@@ -82,6 +91,7 @@ export const data = [
     },
     {
         asset: 'NEAR',
+        id: 'near',
         price: '$300.00',
         tvl: '$500,000,000.00',
         apy: '5.00%',
@@ -91,6 +101,7 @@ export const data = [
     },
     {
         asset: 'BAND',
+        id: 'band-protocol',
         price: '$300.00',
         tvl: '$500,000,000.00',
         apy: '5.00%',
