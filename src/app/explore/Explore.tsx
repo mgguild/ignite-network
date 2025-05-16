@@ -3,10 +3,10 @@ import { data } from './data'; // Adjust the path based on the file location
 
 const Explore: React.FC = () => {
     return (
-        <section id="/" className="explore bg-gray-900 min-h-screen flex flex-col items-center justify-center p-8 py-32">
+        <section id="explore" className="explore bg-gray-900 min-h-screen flex flex-col items-center justify-center p-8 py-32">
             <div className="max-w-7xl mx-auto">
-               <div
-                    className="bg-[url('/cloud.png')] bg-cover bg-center bg-gray-800 text-white rounded-lg shadow-lg p-6 mb-8 "
+                <div
+                    className="bg-[url('/cloud.png')] bg-cover bg-center bg-gray-800 text-white rounded-lg shadow-lg p-6 mb-8"
                 >
                     <h2 className="text-6xl font-bold mb-4 text-teal">Explore</h2>
                     <p className="text-gray-300">
@@ -15,8 +15,8 @@ const Explore: React.FC = () => {
                 </div>
                 <div className="bg-gray-800 text-white rounded-lg shadow-lg p-6">
                     <div className="overflow-x-auto">
-                        <table className="table-auto w-full text-left text-gray-300">
-                            <thead className="bg-gray-700 text-teal-400 text-lg">
+                        <table className="table-auto w-full text-center text-gray-300">
+                            <thead className="bg-gray-700 text-teal-400 text-lg justify-start">
                                 <tr>
                                     <th className="px-4 py-2">Asset</th>
                                     <th className="px-4 py-2">Price</th>
@@ -30,16 +30,34 @@ const Explore: React.FC = () => {
                             <tbody>
                                 {data.map((row, index) => (
                                     <tr key={index} className="border-b border-gray-700">
-                                        <td className="px-4 py-2">{row.asset}</td>
+                                        <td className="px-4 py-2 flex items-center">
+                                            <img
+                                                src={row.logo}
+                                                alt={`${row.asset} logo`}
+                                                className="w-6 h-6 mr-2"
+                                            />
+                                            {row.asset}
+                                        </td>
                                         <td className="px-4 py-2">{row.price}</td>
                                         <td className="px-4 py-2">{row.apy}</td>
                                         <td className="px-4 py-2">{row.commission}</td>
                                         <td className="px-4 py-2">{row.product}</td>
-                                        <td className="px-4 py-2">{row.ecosystem}</td>
+                                        <td className="px-4 py-2 flex items-center justify-center">
+                                            <img
+                                                src={row.ecosystem}
+                                                alt={`${row.asset} ecosystem`}
+                                                className="w-6 h-6 mr-2"
+                                            />
+                                        </td>
                                         <td className="px-4 py-2">
-                                            <button className="bg-teal-700 hover:bg-black text-white font-bold py-1 px-4 rounded">
+                                            <a
+                                                href={row.stakingLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="bg-teal-700 hover:bg-black text-white font-bold py-1 px-4 rounded-lg transition duration-300"
+                                            >
                                                 Stake
-                                            </button>
+                                            </a>
                                         </td>
                                     </tr>
                                 ))}

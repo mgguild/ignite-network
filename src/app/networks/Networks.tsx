@@ -8,7 +8,7 @@ const Networks: React.FC = () => {
             className="py-12 bg-[url('/tealll.png')] bg-cover bg-center bg-gray-50"
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-22">
-               <div className="text-center mb-8">
+                <div className="text-center mb-8">
                     {/* Gradient Text for Title */}
                     <h1 className="text-7xl font-bold bg-gradient-to-r from-black to-teal-500 bg-clip-text text-transparent">
                         Networks
@@ -21,11 +21,14 @@ const Networks: React.FC = () => {
                     </p>
                 </div>
                 {/* Grid Layout */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {networks.slice(0, 9).map((network) => (
-                        <div
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+                    {networks.slice(0, 8).map((network) => (
+                        <a
                             key={network.id}
-                            className="bg-white shadow-md rounded-lg p-4 flex flex-col items-center text-center transition-transform transform hover:scale-105 hover:shadow-bg-black-900"
+                            href={network.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-white shadow-md rounded-lg p-4 flex flex-col items-center text-center transition-transform transform hover:scale-105 hover:shadow-lg"
                         >
                             <img
                                 src={network.logo}
@@ -34,7 +37,7 @@ const Networks: React.FC = () => {
                             />
                             <h3 className="text-lg font-semibold text-gray-900">{network.name}</h3>
                             <p className="text-sm text-gray-500">{network.symbol}</p>
-                        </div>
+                        </a>
                     ))}
                 </div>
                 <div className="text-center mt-8">
