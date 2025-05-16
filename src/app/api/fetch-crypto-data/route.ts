@@ -95,6 +95,18 @@ async function fetchFreshData(cacheKey: string, retries: number, delay: number,
                         const missingCryptoData = cryptoData.find(item => item.asset === asset);
                         if (!missingCryptoData) continue;
 
+                        let cmcId = null;
+                        switch (asset) {
+                            case 'SOPH':
+                                cmcId = '32087';
+                                break;
+                            case 'HYC':
+                                cmcId = '27892';
+                                break;
+                            default:
+                                break;
+                        }
+
                         const cmcResponse = await axios.get('https://pro-api.coinmarketcap.com/v2/tools/price-conversion', {
                             headers: {
                                 'X-CMC_PRO_API_KEY': process.env.CMC_API_KEY,
@@ -102,17 +114,14 @@ async function fetchFreshData(cacheKey: string, retries: number, delay: number,
                             },
                             params: {
                                 amount: 1,
-                                id: asset === 'SOPH' ? '32087' : null, // Specify the ID for SOPH
-
-                                // For other assets, use the symbol. Soph is just a special case
-                                symbol: asset === 'SOPH' ? null : asset, 
+                                id: cmcId === null ? null : cmcId,
+                                symbol: cmcId === null ? asset : null, 
                                 convert: vsCurrency.toUpperCase(),
                             },
                         });
 
                         if (cmcResponse.data && cmcResponse.data.data) {
                             const cmcData = cmcResponse.data.data;
-                            console.log(`CoinMarketCap data for ${asset}:`, cmcData);
                             
                             // Handle case when cmcData is an array (multiple matches for the symbol)
                             const dataItems = Array.isArray(cmcData) ? cmcData : [cmcData];
