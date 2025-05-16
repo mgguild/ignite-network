@@ -18,16 +18,18 @@ export default function Footer() {
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Follow Us Section */}
                 <div className="flex flex-col justify-center items-center mb-8">
-                    <h3 className="text-xl font-semibold mb-4 text-center">Follow Us</h3>
+                    {/* <h3 className="text-xl font-semibold mb-4 text-center">Follow Us</h3> */}
                        {/* Logo Below Follow Us */}
-                    <div className="mt-0">
-                        <img
-                            src="/Ignite-Neworkwhite.png" // Replace with the path to your logo
-                            alt="Logo"
-                            className="w-40 h-auto"
-                        />
+                      <div className="mt-0">
+                        <a href="/" className="block">
+                            <img
+                                src="/Ignite-Neworkwhite.png" // Replace with the path to your logo
+                                alt="Logo"
+                                className="w-40 h-auto"
+                            />
+                        </a>
                     </div>
-                    <div className="flex justify-center space-x-6 text-gray-400">
+                    {/* <div className="flex justify-center space-x-6 text-gray-400">
                         <a
                             className="text-white px-4 py-4"
                             href=""
@@ -75,7 +77,7 @@ export default function Footer() {
                                 <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z" />
                             </svg>
                         </a>
-                    </div>
+                    </div> */}
                 </div>
                 {/* Footer Bottom */}
                 <div className="mt-8 border-t border-white pt-4 text-center text-white text-sm">
