@@ -108,13 +108,23 @@ const Explore: React.FC = () => {
                                         <td className="px-4 py-2">{isLoading ? 'Loading..' : row.price}</td>
                                         <td className="px-4 py-2">{row.apy}</td>
                                         <td className="px-4 py-2">{row.commission}</td>
-                                        <td className="px-4 py-2">{row.product}</td>
-                                        <td className="px-4 py-2 flex items-center justify-center">
-                                            <img
-                                                src={row.ecosystem}
-                                                alt={`${row.asset} ecosystem`}
-                                                className="w-6 h-6 mr-2"
-                                            />
+                                        <td className="px-4 py-2">
+                                            <span className="bg-gray-700 text-white text-xs font-semibold py-1 px-3 rounded-full">
+                                                {row.product}
+                                            </span>
+                                        </td>
+                                       <td className="px-4 py-2 flex items-center justify-center">
+                                            <a
+                                                href={row.ecosystemLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                <img
+                                                    src={row.ecosystem}
+                                                    alt={`${row.asset} ecosystem`}
+                                                    className="w-6 h-6 mr-2"
+                                                />
+                                            </a>
                                         </td>
                                         <td className="px-4 py-2">
                                             <a
