@@ -9,9 +9,16 @@ interface CacheEntry {
 const cache: Record<string, CacheEntry> = {};
 const CACHE_REFRESH = 60 * 60 * 1000; // 1 hour refresh threshold
 
+interface CryptoDataItem {
+    id: string;
+    asset: string;
+}
+
 // Adding this to handle rate-limiting
-async function retryRequest(retries: number, delay: number, cryptoIds: string[], vsCurrency: string) {
-    const cacheKey = `${vsCurrency}-${cryptoIds.sort().join(',')}`;
+async function retryRequest(retries: number, delay: number, cryptoData: CryptoDataItem[], vsCurrency: string) {
+    // Extract IDs and sort them for consistent caching
+    const cryptoIds = cryptoData.map(item => item.id).filter(Boolean).sort();
+    const cacheKey = `${vsCurrency}-${cryptoIds.join(',')}`;
     
     const cacheEntry = cache[cacheKey];
     const now = Date.now();
@@ -22,13 +29,16 @@ async function retryRequest(retries: number, delay: number, cryptoIds: string[],
     }
     
     console.log('Cache missing or older than 1 hour - fetching fresh data');
-    return await fetchFreshData(cacheKey, retries, delay, cryptoIds, vsCurrency);
+    return await fetchFreshData(cacheKey, retries, delay, cryptoData, vsCurrency);
 }
 
 async function fetchFreshData(cacheKey: string, retries: number, delay: number, 
-    cryptoIds: string[], vsCurrency: string) {
+    cryptoData: CryptoDataItem[], vsCurrency: string) {
     for (let attempt = 0; attempt < retries; attempt++) {
         try {
+            // Extract crypto IDs here, only at the time of the API call
+            const cryptoIds = cryptoData.map(item => item.id).filter(Boolean);
+            
             const apiKey = process.env.COINGECKO_API_KEY;
             const baseUrl = 'https://api.coingecko.com/api/v3/coins/markets';
             
@@ -50,6 +60,104 @@ async function fetchFreshData(cacheKey: string, retries: number, delay: number,
             
             const totalTokensFetched = response.data.length;
             console.log(`Number of crypto tokens returned: ${totalTokensFetched}`);
+
+            // Check if response contains all requested tokens and if they have prices
+            const missingTokens = cryptoIds.filter(id => !response.data.some((item: { id: string }) => item.id === id));
+            if (missingTokens.length > 0) {
+                console.error(`Missing tokens in response: ${missingTokens.join(', ')}`);
+            }
+            const missingPrices = response.data.filter((item: { current_price: number }) => item.current_price == null);
+            if (missingPrices.length > 0) {
+                console.error(`Missing prices in response: ${missingPrices.map((item: { id: string }) => item.id).join(', ')}`);
+            }
+
+            // Get all the `asset` values from the tokens that are missing and the tokens with missing prices
+            const missingAssets = cryptoData.filter(item => 
+                missingTokens.includes(item.id) || 
+                missingPrices.some((priceItem: { id: string }) => priceItem.id === item.id)
+            ).map(item => item.asset);
+            if (missingAssets.length > 0) {
+                console.error(`Missing assets in response: ${missingAssets.join(', ')}`);
+            }
+
+            if (missingAssets.length > 0) {
+                const cmcResults: Array<{
+                    id: string;
+                    symbol: string;
+                    name: string;
+                    current_price: number;
+                    last_updated: string;
+                    _source: string;
+                }> = [];
+                
+                for (const asset of missingAssets) {
+                    try {
+                        const missingCryptoData = cryptoData.find(item => item.asset === asset);
+                        if (!missingCryptoData) continue;
+
+                        const cmcResponse = await axios.get('https://pro-api.coinmarketcap.com/v2/tools/price-conversion', {
+                            headers: {
+                                'X-CMC_PRO_API_KEY': process.env.CMC_API_KEY,
+                                'Accept': 'application/json',
+                            },
+                            params: {
+                                amount: 1,
+                                id: asset === 'SOPH' ? '32087' : null, // Specify the ID for SOPH
+
+                                // For other assets, use the symbol. Soph is just a special case
+                                symbol: asset === 'SOPH' ? null : asset, 
+                                convert: vsCurrency.toUpperCase(),
+                            },
+                        });
+
+                        if (cmcResponse.data && cmcResponse.data.data) {
+                            const cmcData = cmcResponse.data.data;
+                            console.log(`CoinMarketCap data for ${asset}:`, cmcData);
+                            
+                            // Handle case when cmcData is an array (multiple matches for the symbol)
+                            const dataItems = Array.isArray(cmcData) ? cmcData : [cmcData];
+                            
+                            // Use the first matching item (most relevant)
+                            for (const item of dataItems) {
+                                const targetCurrency = vsCurrency.toUpperCase();
+                                if (item.quote && item.quote[targetCurrency]?.price) {
+                                    const price = item.quote[targetCurrency].price;
+                                    
+                                    const formattedData = {
+                                        id: missingCryptoData.id,
+                                        symbol: item.symbol.toLowerCase(),
+                                        name: item.name,
+                                        current_price: price,
+                                        last_updated: item.last_updated,
+                                        _source: 'coinmarketcap' // metadata to identify source
+                                    };
+                                    
+                                    cmcResults.push(formattedData);
+                                    console.log(`Added fallback price for ${asset} from CoinMarketCap`);
+                                    break; // Use only the first valid result
+                                }
+                            }
+                        }
+                    } catch (error) {
+                        if (axios.isAxiosError(error) && error.response?.status === 429) {
+                            console.log(`Rate limit hit for CoinMarketCap. Retrying in ${delay}ms...`);
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                        } else {
+                            console.error(`Error fetching data from CoinMarketCap for ${asset}:`, error);
+                        }
+                    }
+                }
+                
+                // Append CoinMarketCap results to CoinGecko response
+                if (cmcResults.length > 0) {
+                    // Remove any entries in response.data that match the IDs we're adding from CMC, just in case
+                    response.data = response.data.filter((item: { id: string }) => 
+                        !cmcResults.some(cmcItem => cmcItem.id === item.id));
+                    
+                    response.data = [...response.data, ...cmcResults];
+                    console.log(`Added ${cmcResults.length} tokens from CoinMarketCap fallback`);
+                }
+            }
 
             // Store in cache
             cache[cacheKey] = {
@@ -74,16 +182,16 @@ async function fetchFreshData(cacheKey: string, retries: number, delay: number,
 
 export async function POST(req: NextRequest) {
     try {
-        const { cryptoAmount, cryptoSymbol, fiatSymbol } = await req.json();
+        const { cryptoAmount, cryptoData, fiatSymbol } = await req.json();
 
-        if (!cryptoAmount || !cryptoSymbol || !fiatSymbol) {
+        if (!cryptoAmount || !cryptoData || !fiatSymbol) {
             return new Response(JSON.stringify({ error: 'Missing required parameters.' }), { status: 400 });
         }
 
-        const cryptoIds = Array.isArray(cryptoSymbol) ? cryptoSymbol : [cryptoSymbol];
+        // Extract crypto IDs during the API call, not here
         const retries = 3;
         const delay = 5000;
-        const response = await retryRequest(retries, delay, cryptoIds, fiatSymbol.toLowerCase());
+        const response = await retryRequest(retries, delay, cryptoData, fiatSymbol.toLowerCase());
 
         const { data } = response;
 

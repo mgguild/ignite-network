@@ -17,10 +17,9 @@ const Explore: React.FC = () => {
 
     const fetchCryptoData = async () => {
     setIsLoading(true);
+    const cryptoData = data;
     
-    try {
-        const cryptoSymbol = data.map((item) => item.id);
-            
+    try {            
         const cryptoAmount = 1;
         const fiatSymbol = 'usd';
         
@@ -31,8 +30,8 @@ const Explore: React.FC = () => {
             },
             body: JSON.stringify({
                 cryptoAmount,
-                cryptoSymbol,
-                fiatSymbol
+                cryptoData,
+                fiatSymbol,
             }),
         });
     
