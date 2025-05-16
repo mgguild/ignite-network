@@ -1,14 +1,4 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faFacebookF,
-    faTwitter,
-    faInstagram,
-    faLinkedinIn,
-    faYoutube,
-    faTelegram,
-    faDiscord,
-    faGithub,
-} from '@fortawesome/free-brands-svg-icons';
+import Link from "next/link";
 
 export default function Footer() {
     return (
@@ -21,13 +11,13 @@ export default function Footer() {
                     {/* <h3 className="text-xl font-semibold mb-4 text-center">Follow Us</h3> */}
                        {/* Logo Below Follow Us */}
                       <div className="mt-0">
-                        <a href="/" className="block">
+                        <Link href="/" className="block">
                             <img
                                 src="/Ignite-Neworkwhite.png" // Replace with the path to your logo
                                 alt="Logo"
                                 className="w-40 h-auto"
                             />
-                        </a>
+                        </Link>
                     </div>
                     {/* <div className="flex justify-center space-x-6 text-gray-400">
                         <a
