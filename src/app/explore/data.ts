@@ -28,7 +28,7 @@ export const data = [
         id: 'realio-network',
         price: '-',
         apy: '-',
-        commission: '-',
+        commission: '5.0%',
         product: 'Proof-of-Stake',
         ecosystem: '/logos/rio_icon.png',
         logo: '/logos/rio_icon.png',
