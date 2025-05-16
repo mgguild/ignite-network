@@ -1,7 +1,74 @@
-import React from 'react';
-import { data } from './data'; // Adjust the path based on the file location
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { data } from "./data";
 
 const Explore: React.FC = () => {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const cryptoDataFetched = useRef(false);
+
+    useEffect(() => {
+        if (cryptoDataFetched.current) {
+            return;
+        }
+        fetchCryptoData();
+
+    }, []);
+
+    const fetchCryptoData = async () => {
+    setIsLoading(true);
+    
+    try {
+        const cryptoSymbol = data.map((item) => item.id);
+            
+        const cryptoAmount = 1;
+        const fiatSymbol = 'usd';
+        
+        const response = await fetch(`/api/fetch-crypto-data`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                cryptoAmount,
+                cryptoSymbol,
+                fiatSymbol
+            }),
+        });
+    
+        const result = await response.json();
+
+        if (response.ok) {
+            const cryptoPriceMap = result.cryptoData.reduce((acc: Record<string, { id: string; current_price: number }>, crypto: { id: string; current_price: number }) => {
+                acc[crypto.id] = crypto;
+                return acc;
+            }, {});
+            
+            // Update data fetched from data.ts with current prices from API
+            data.forEach((item) => {
+                if (item.id && cryptoPriceMap[item.id]) {
+                    item.price = `$${cryptoPriceMap[item.id].current_price.toFixed(2)}`;
+                }
+            });
+            
+            console.log(`Updated data:`, data);
+
+            cryptoDataFetched.current = true;
+        } else {
+            console.error(`Failed to fetch data for crypto data:`, result.error);
+        }
+        
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error("Error fetching crypto data:", error.message);
+        } else {
+            console.error("Unknown error occurred while fetching crypto data");
+        }
+    } finally {
+        setIsLoading(false);
+    }
+};
+
     return (
         <section id="explore" className="explore bg-gray-900 min-h-screen flex flex-col items-center justify-center p-8 py-32">
             <div className="max-w-7xl mx-auto">
@@ -38,7 +105,7 @@ const Explore: React.FC = () => {
                                             />
                                             {row.asset}
                                         </td>
-                                        <td className="px-4 py-2">{row.price}</td>
+                                        <td className="px-4 py-2">{isLoading ? 'Loading..' : row.price}</td>
                                         <td className="px-4 py-2">{row.apy}</td>
                                         <td className="px-4 py-2">{row.commission}</td>
                                         <td className="px-4 py-2">{row.product}</td>
