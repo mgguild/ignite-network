@@ -47,7 +47,13 @@ const Explore: React.FC = () => {
             // Update data fetched from data.ts with current prices from API
             data.forEach((item) => {
                 if (item.id && cryptoPriceMap[item.id]) {
-                    item.price = `$${cryptoPriceMap[item.id].current_price.toFixed(2)}`;
+                    if (cryptoPriceMap[item.id].current_price != null) {
+                        item.price = `$${cryptoPriceMap[item.id].current_price.toFixed(2)}`;
+                    } else {
+                        item.price = "-";
+                    }
+                } else {
+                    item.price = "-";
                 }
             });
             
