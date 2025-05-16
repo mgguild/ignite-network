@@ -25,7 +25,7 @@ export const data = [
     },
     {
         asset: 'RIO',
-        id: 'rio',
+        id: 'realio-network',
         price: '-',
         apy: '-',
         commission: '-',
