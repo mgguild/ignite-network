@@ -75,7 +75,7 @@ const Explore: React.FC = () => {
 };
 
     return (
-        <section id="explore" className="explore bg-gray-900 min-h-screen flex flex-col items-center justify-center p-8 py-32">
+        <section id="explore" className="explore bg-gray-900 min-h-screen flex flex-col items-center justify-center p-8 py-32 pt-46 ">
             <div className="max-w-7xl mx-auto">
                 <div
                     className="bg-[url('/cloud.png')] bg-cover bg-center bg-gray-800 text-white rounded-lg shadow-lg p-6 mb-8"
@@ -93,7 +93,7 @@ const Explore: React.FC = () => {
                                     <th className="px-4 py-2">Asset</th>
                                     <th className="px-4 py-2">Price</th>
                                     <th className="px-4 py-2">APY</th>
-                                    <th className="px-4 py-2">Commission</th>
+                                    <th className="px-4 py-2">Uptime</th>
                                     <th className="px-4 py-2">Product</th>
                                     <th className="px-4 py-2">Ecosystem</th>
                                     <th className="px-4 py-2">Yield</th>
