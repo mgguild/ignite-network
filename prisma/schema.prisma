@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Token {
+  id            String   @id @map("_id")
+  asset         String   // The token symbol (e.g., RON, NEAR)
+  coinGeckoId   String   // The coingecko or other API id (e.g., ronin, near)
+  cmcId         String?  // The coinmarketcap id (e.g., 1027)
+  price         String?
+  apy           String?
+  commission    String?
+  product       String
+  ecosystem     String
+  logo          String
+  stakingLink   String
+  ecosystemLink String
+  estimatedApy  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
