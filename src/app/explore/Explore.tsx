@@ -1,84 +1,103 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { data } from "./data";
+// import { data } from "./data";
 import ExploreMobile from "./ExploreMobile";
 import Image from "next/image";
 
+interface CryptoData {
+    id: string;
+    asset: string;
+    logo: string;
+    price?: string;
+    apy?: string;
+    commission?: string;
+    product?: string;
+    ecosystem?: string;
+    ecosystemLink?: string;
+    stakingLink?: string;
+}
+
 const Explore: React.FC = () => {
-    const [isMobile, setIsMobile] = useState(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [data, setData] = useState<CryptoData[]>([]);
     const [hasMounted, setHasMounted] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
     const cryptoDataFetched = useRef(false);
 
     useEffect(() => {
         setHasMounted(true);
-        const handleResize = () => {
-            setIsMobile(window.innerWidth < 768);
-        };
-        handleResize();
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
     }, []);
 
     useEffect(() => {
-        if (cryptoDataFetched.current) return;
+        if (cryptoDataFetched.current) {
+            return;
+        }
+        cryptoDataFetched.current = true;
         fetchCryptoData();
-    }, []);
+    });
 
     const fetchCryptoData = async () => {
+        console.log(`Fetching crypto data...`);
         setIsLoading(true);
-        const cryptoData = data;
-
+        
+        
         try {
-            const cryptoAmount = 1;
-            const fiatSymbol = "usd";
-
-            const response = await fetch(`/api/fetch-crypto-data`, {
-                method: "POST",
+            const dbResponse = await fetch(`/api/fetch-crypto-data-from-db`, {
+                method: 'GET',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            const dbResult = await dbResponse.json();
+            console.log(`Fetched data from DB:`, dbResult);
+            
+            if (!dbResult.tokens || !Array.isArray(dbResult.tokens)) {
+                throw new Error("Invalid data format received from database");
+            }
+            
+            setData(dbResult.tokens);
+            
+            const cryptoAmount = 1;
+            const fiatSymbol = 'usd';
+            
+            const response = await fetch(`/api/fetch-crypto-data`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     cryptoAmount,
-                    cryptoData,
+                    cryptoData: dbResult.tokens,
                     fiatSymbol,
                 }),
             });
-
+        
             const result = await response.json();
 
             if (response.ok) {
-                const cryptoPriceMap = result.cryptoData.reduce(
-                    (
-                        acc: Record<string, { id: string; current_price: number }>,
-                        crypto: { id: string; current_price: number }
-                    ) => {
-                        acc[crypto.id] = crypto;
-                        return acc;
-                    },
-                    {}
-                );
-
-                // Update data fetched from data.ts with current prices from API
-                data.forEach((item) => {
+                const cryptoPriceMap = result.cryptoData.reduce((acc: Record<string, { id: string; current_price: number }>, crypto: { id: string; current_price: number }) => {
+                    acc[crypto.id] = crypto;
+                    return acc;
+                }, {});
+                
+                setData(prevData => prevData.map(item => {
                     if (item.id && cryptoPriceMap[item.id]) {
                         if (cryptoPriceMap[item.id].current_price != null) {
-                            item.price = `$${cryptoPriceMap[item.id].current_price.toFixed(2)}`;
-                        } else {
-                            item.price = "-";
+                            return {
+                                ...item,
+                                price: `$${cryptoPriceMap[item.id].current_price.toFixed(2)}`
+                            };
                         }
-                    } else {
-                        item.price = "-";
                     }
-                });
-
-                console.log(`Updated data:`, data);
-
-                cryptoDataFetched.current = true;
+                    return {
+                        ...item,
+                    };
+                }));
             } else {
                 console.error(`Failed to fetch data for crypto data:`, result.error);
             }
+            
         } catch (error) {
             if (error instanceof Error) {
                 console.error("Error fetching crypto data:", error.message);
@@ -91,6 +110,8 @@ const Explore: React.FC = () => {
     };
 
     if (!hasMounted) return null;
+
+    const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
     if (isMobile) return <ExploreMobile />;
 
     return (
@@ -130,7 +151,11 @@ const Explore: React.FC = () => {
                                     <tr key={index} className="border-b border-gray-700">
                                         <td className="px-4 py-2 flex items-center">
                                             <Image
-                                                src={row.logo}
+                                                src={
+                                                    typeof row.logo === "string" && row.logo.trim().length > 0
+                                                        ? row.logo
+                                                        : "/placeholder.png"
+                                                }
                                                 alt={`${row.asset} logo`}
                                                 width={24}
                                                 height={24}
@@ -138,9 +163,10 @@ const Explore: React.FC = () => {
                                             />
                                             {row.asset}
                                         </td>
-                                        <td className="px-4 py-2">{isLoading ? "Loading.." : row.price}</td>
-                                        <td className="px-4 py-2">{row.apy}</td>
-                                        <td className="px-4 py-2">{row.commission}</td>
+                                    
+                                        <td className="px-4 py-2">{isLoading ? "Loading" : row.price ? row.price : "-"}</td>
+                                        <td className="px-4 py-2">{isLoading ? "Loading" : row.apy ? row.apy : "-"}</td>
+                                        <td className="px-4 py-2">{isLoading ? "Loading" : row.commission ? row.commission : "-"}</td>
                                         <td className="px-4 py-2">
                                             <span className="bg-gray-700 text-white text-xs font-semibold py-1 px-3 rounded-full">
                                                 {row.product}
@@ -149,7 +175,11 @@ const Explore: React.FC = () => {
                                         <td className="px-4 py-2 flex items-center justify-center">
                                             <a href={row.ecosystemLink} target="_blank" rel="noopener noreferrer">
                                                 <Image
-                                                    src={row.ecosystem}
+                                                    src={
+                                                        typeof row.ecosystem === "string" && row.ecosystem.trim().length > 0
+                                                            ? row.ecosystem
+                                                            : "/placeholder.png"
+                                                    }
                                                     alt={`${row.asset} ecosystem`}
                                                     width={24}
                                                     height={24}
