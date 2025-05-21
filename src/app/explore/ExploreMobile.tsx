@@ -19,7 +19,8 @@ const ExploreMobile: React.FC = () => {
                         >
                             {/* Header with logo and asset */}
                             <div className="flex items-center gap-2 bg-gray-900 px-4 py-3">
-                                <Image src={row.logo} alt={row.asset} className="w-8 h-8 rounded" />
+                                <Image src={row.logo} alt={row.asset} className="rounded" width={24}
+                                                height={24} />
                                 <span className="font-semibold text-white text-lg">{row.asset}</span>
                                 <a
                                     href={row.ecosystemLink}
@@ -27,7 +28,8 @@ const ExploreMobile: React.FC = () => {
                                     rel="noopener noreferrer"
                                     className="ml-auto"
                                 >
-                                    <Image src={row.ecosystem} alt={`${row.asset} ecosystem`} className="w-6 h-6" />
+                                    <Image src={row.ecosystem} alt={`${row.asset} ecosystem`} width={24}
+                                                height={24} />
                                 </a>
                             </div>
                             {/* Table-like fields */}

@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import ExploreMobile from "./ExploreMobile";
 import Image from "next/image";
 
+
 interface CryptoData {
     id: string;
     asset: string;
@@ -159,7 +160,7 @@ const Explore: React.FC = () => {
                                                 alt={`${row.asset} logo`}
                                                 width={24}
                                                 height={24}
-                                                className="w-6 h-6 mr-2"
+                                                className="mr-2"
                                             />
                                             {row.asset}
                                         </td>
@@ -183,7 +184,7 @@ const Explore: React.FC = () => {
                                                     alt={`${row.asset} ecosystem`}
                                                     width={24}
                                                     height={24}
-                                                    className="w-6 h-6 mr-2"
+                                                    className="mr-2"
                                                 />
                                             </a>
                                         </td>
