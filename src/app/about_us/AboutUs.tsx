@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 const AboutUs: React.FC = () => {
     return (
@@ -22,10 +23,13 @@ const AboutUs: React.FC = () => {
                 <div className="flex flex-col md:flex-row items-center md:items-center">
                     {/* Left Column: Image */}
                     <div className="flex flex-col items-center md:items-center md:w-2/3">
-                        <img
+                        <Image
                             src="/Ignite-Neworkwhite.png"
                             alt="Profile"
-                            className="w-[100rem] h-auto rounded-full mb-4"
+                            width={320} // set your preferred width
+                            height={320} // set your preferred height
+                            className="rounded-full mb-4"
+                            priority
                         />
                     </div>
 

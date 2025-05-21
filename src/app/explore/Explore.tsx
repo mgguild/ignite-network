@@ -3,93 +3,112 @@
 import { useEffect, useRef, useState } from "react";
 import { data } from "./data";
 import ExploreMobile from "./ExploreMobile";
+import Image from "next/image";
 
 const Explore: React.FC = () => {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isMobile, setIsMobile] = useState(false);
+    const [hasMounted, setHasMounted] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const cryptoDataFetched = useRef(false);
 
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-
-    if (isMobile) {
-        return <ExploreMobile />;
-    }
+    useEffect(() => {
+        setHasMounted(true);
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     useEffect(() => {
-        if (cryptoDataFetched.current) {
-            return;
-        }
+        if (cryptoDataFetched.current) return;
         fetchCryptoData();
-
     }, []);
 
     const fetchCryptoData = async () => {
-    setIsLoading(true);
-    const cryptoData = data;
-    
-    try {            
-        const cryptoAmount = 1;
-        const fiatSymbol = 'usd';
-        
-        const response = await fetch(`/api/fetch-crypto-data`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                cryptoAmount,
-                cryptoData,
-                fiatSymbol,
-            }),
-        });
-    
-        const result = await response.json();
+        setIsLoading(true);
+        const cryptoData = data;
 
-        if (response.ok) {
-            const cryptoPriceMap = result.cryptoData.reduce((acc: Record<string, { id: string; current_price: number }>, crypto: { id: string; current_price: number }) => {
-                acc[crypto.id] = crypto;
-                return acc;
-            }, {});
-            
-            // Update data fetched from data.ts with current prices from API
-            data.forEach((item) => {
-                if (item.id && cryptoPriceMap[item.id]) {
-                    if (cryptoPriceMap[item.id].current_price != null) {
-                        item.price = `$${cryptoPriceMap[item.id].current_price.toFixed(2)}`;
+        try {
+            const cryptoAmount = 1;
+            const fiatSymbol = "usd";
+
+            const response = await fetch(`/api/fetch-crypto-data`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    cryptoAmount,
+                    cryptoData,
+                    fiatSymbol,
+                }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                const cryptoPriceMap = result.cryptoData.reduce(
+                    (
+                        acc: Record<string, { id: string; current_price: number }>,
+                        crypto: { id: string; current_price: number }
+                    ) => {
+                        acc[crypto.id] = crypto;
+                        return acc;
+                    },
+                    {}
+                );
+
+                // Update data fetched from data.ts with current prices from API
+                data.forEach((item) => {
+                    if (item.id && cryptoPriceMap[item.id]) {
+                        if (cryptoPriceMap[item.id].current_price != null) {
+                            item.price = `$${cryptoPriceMap[item.id].current_price.toFixed(2)}`;
+                        } else {
+                            item.price = "-";
+                        }
                     } else {
                         item.price = "-";
                     }
-                } else {
-                    item.price = "-";
-                }
-            });
-            
-            console.log(`Updated data:`, data);
+                });
 
-            cryptoDataFetched.current = true;
-        } else {
-            console.error(`Failed to fetch data for crypto data:`, result.error);
+                console.log(`Updated data:`, data);
+
+                cryptoDataFetched.current = true;
+            } else {
+                console.error(`Failed to fetch data for crypto data:`, result.error);
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error("Error fetching crypto data:", error.message);
+            } else {
+                console.error("Unknown error occurred while fetching crypto data");
+            }
+        } finally {
+            setIsLoading(false);
         }
-        
-    } catch (error) {
-        if (error instanceof Error) {
-            console.error("Error fetching crypto data:", error.message);
-        } else {
-            console.error("Unknown error occurred while fetching crypto data");
-        }
-    } finally {
-        setIsLoading(false);
-    }
-};
+    };
+
+    if (!hasMounted) return null;
+    if (isMobile) return <ExploreMobile />;
 
     return (
-        <section id="explore" className="explore bg-gray-900 min-h-screen flex flex-col items-center justify-center p-8 py-32 pt-46 ">
+        <section
+            id="explore"
+            className="explore bg-gray-900 min-h-screen flex flex-col items-center justify-center p-8 py-32 pt-46 "
+        >
             <div className="max-w-7xl mx-auto">
                 <div
                     className="bg-[url('/cloud.png')] bg-cover bg-center bg-gray-800 text-white rounded-lg shadow-lg p-6 mb-8"
                 >
                     <h2 className="text-6xl font-bold mb-4 text-teal">Explore</h2>
                     <p className="text-gray-300">
-                        Ignite Network empowers users to participate in securing multiple blockchain while earning passive income. Explore a wide range of staking, nodes, and validator opportunities across top chains like NEAR and Ronin, among others. Our platform is built both for retail investors and institutions, offering easy delegation. Enjoy high-yield staking with low commission fees and institutional-grade security – so you earn more while your crypto assets remain safe.
+                        Ignite Network empowers users to participate in securing multiple blockchain while earning
+                        passive income. Explore a wide range of staking, nodes, and validator opportunities across top
+                        chains like NEAR and Ronin, among others. Our platform is built both for retail investors and
+                        institutions, offering easy delegation. Enjoy high-yield staking with low commission fees and
+                        institutional-grade security – so you earn more while your crypto assets remain safe.
                     </p>
                 </div>
                 <div className="bg-gray-800 text-white rounded-lg shadow-lg p-6">
@@ -110,14 +129,16 @@ const Explore: React.FC = () => {
                                 {data.map((row, index) => (
                                     <tr key={index} className="border-b border-gray-700">
                                         <td className="px-4 py-2 flex items-center">
-                                            <img
+                                            <Image
                                                 src={row.logo}
                                                 alt={`${row.asset} logo`}
+                                                width={24}
+                                                height={24}
                                                 className="w-6 h-6 mr-2"
                                             />
                                             {row.asset}
                                         </td>
-                                        <td className="px-4 py-2">{isLoading ? 'Loading..' : row.price}</td>
+                                        <td className="px-4 py-2">{isLoading ? "Loading.." : row.price}</td>
                                         <td className="px-4 py-2">{row.apy}</td>
                                         <td className="px-4 py-2">{row.commission}</td>
                                         <td className="px-4 py-2">
@@ -125,15 +146,13 @@ const Explore: React.FC = () => {
                                                 {row.product}
                                             </span>
                                         </td>
-                                       <td className="px-4 py-2 flex items-center justify-center">
-                                            <a
-                                                href={row.ecosystemLink}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                <img
+                                        <td className="px-4 py-2 flex items-center justify-center">
+                                            <a href={row.ecosystemLink} target="_blank" rel="noopener noreferrer">
+                                                <Image
                                                     src={row.ecosystem}
                                                     alt={`${row.asset} ecosystem`}
+                                                    width={24}
+                                                    height={24}
                                                     className="w-6 h-6 mr-2"
                                                 />
                                             </a>

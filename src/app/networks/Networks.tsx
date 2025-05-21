@@ -1,5 +1,8 @@
 import React from 'react';
+import Link from 'next/link';
 import { networks } from './networkData';
+import Nodes from './Nodes';
+import Image from 'next/image';
 
 const Networks: React.FC = () => {
     return (
@@ -23,21 +26,23 @@ const Networks: React.FC = () => {
                 {/* Grid Layout */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
                     {networks.slice(0, 8).map((network) => (
-                        <a
+                        <Link
                             key={network.id}
                             href={network.link}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="bg-white shadow-md rounded-lg p-4 flex flex-col items-center text-center transition-transform transform hover:scale-105 hover:shadow-lg"
                         >
-                            <img
+                            <Image
                                 src={network.logo}
                                 alt={`${network.name} logo`}
+                                width={64}
+                                height={64}
                                 className="w-16 h-auto mb-4"
                             />
                             <h3 className="text-lg font-semibold text-gray-900">{network.name}</h3>
                             <p className="text-sm text-gray-500">{network.symbol}</p>
-                        </a>
+                        </Link>
                     ))}
                 </div>
                 <div className="text-center mt-8">
@@ -47,6 +52,7 @@ const Networks: React.FC = () => {
                     </button> */}
                 </div>
             </div>
+            <Nodes />
         </section>
     );
 };

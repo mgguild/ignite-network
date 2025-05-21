@@ -1,4 +1,17 @@
 export const data = [
+     {
+        asset: 'POWER',
+        id: 'power',
+        price: '-',
+        apy: 'Varies',
+        commission: '100%',
+        product: 'Node',
+        ecosystem: '/logos/powerloom.jpg',
+        logo: '/logos/powerloom.jpg',
+        stakingLink: 'https://snapshotter-dashboard.powerloom.network/?fbclid=IwY2xjawKamEhleHRuA2FlbQIxMABicmlkETFFWVM4WURxVlJCNzBIdFJ2AR5XfNUNHuIdM_tlXRSDbo53p63Pm7WD9VHVj8vNr91gTgGms06GkYRbFDhW9A_aem_tEqwEKnnlXojVqylHpDesA',
+        ecosystemLink: 'https://powerloom.io/', 
+       
+    },
     {
         asset: 'RON',
         id: 'ronin',
@@ -99,6 +112,6 @@ export const data = [
         logo: '/logos/hychain.jpg',
         stakingLink: 'https://www.hychain.com/',
         ecosystemLink: 'https://hychain.com/', 
-       
+    
     },
 ];

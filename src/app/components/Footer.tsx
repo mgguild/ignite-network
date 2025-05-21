@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
     return (
@@ -10,9 +11,11 @@ export default function Footer() {
                     <div className="flex justify-center items-center gap-8 py-1">
                         {/* Ignite Network Logo */}
                         <Link href="/" className="block p-2 rounded">
-                            <img
+                            <Image
                                 src="/Ignite-Neworkwhite.png"
                                 alt="Ignite Network Logo"
+                                width={48}
+                                height={48}
                                 className="h-12 w-auto"
                             />
                         </Link>
