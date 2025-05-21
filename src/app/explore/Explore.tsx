@@ -1,78 +1,105 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { data } from "./data";
+
+interface CryptoData {
+    id: string;
+    asset: string;
+    logo: string;
+    price?: string;
+    apy?: string;
+    commission?: string;
+    product?: string;
+    ecosystem?: string;
+    ecosystemLink?: string;
+    stakingLink?: string;
+}
 
 const Explore: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [data, setData] = useState<CryptoData[]>([]);
     const cryptoDataFetched = useRef(false);
 
     useEffect(() => {
         if (cryptoDataFetched.current) {
             return;
         }
+        cryptoDataFetched.current = true;
         fetchCryptoData();
-
-    }, []);
+    });
 
     const fetchCryptoData = async () => {
-    setIsLoading(true);
-    const cryptoData = data;
-    
-    try {            
-        const cryptoAmount = 1;
-        const fiatSymbol = 'usd';
+        console.log(`Fetching crypto data...`);
+        setIsLoading(true);
         
-        const response = await fetch(`/api/fetch-crypto-data`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                cryptoAmount,
-                cryptoData,
-                fiatSymbol,
-            }),
-        });
-    
-        const result = await response.json();
-
-        if (response.ok) {
-            const cryptoPriceMap = result.cryptoData.reduce((acc: Record<string, { id: string; current_price: number }>, crypto: { id: string; current_price: number }) => {
-                acc[crypto.id] = crypto;
-                return acc;
-            }, {});
-            
-            // Update data fetched from data.ts with current prices from API
-            data.forEach((item) => {
-                if (item.id && cryptoPriceMap[item.id]) {
-                    if (cryptoPriceMap[item.id].current_price != null) {
-                        item.price = `$${cryptoPriceMap[item.id].current_price.toFixed(2)}`;
-                    } else {
-                        item.price = "-";
-                    }
-                } else {
-                    item.price = "-";
+        
+        try {
+            const dbResponse = await fetch(`/api/fetch-crypto-data-from-db`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
                 }
             });
             
-            console.log(`Updated data:`, data);
-
-            cryptoDataFetched.current = true;
-        } else {
-            console.error(`Failed to fetch data for crypto data:`, result.error);
-        }
+            const dbResult = await dbResponse.json();
+            console.log(`Fetched data from DB:`, dbResult);
+            
+            if (!dbResult.tokens || !Array.isArray(dbResult.tokens)) {
+                throw new Error("Invalid data format received from database");
+            }
+            
+            setData(dbResult.tokens);
+            
+            const cryptoAmount = 1;
+            const fiatSymbol = 'usd';
+            
+            const response = await fetch(`/api/fetch-crypto-data`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    cryptoAmount,
+                    cryptoData: dbResult.tokens,
+                    fiatSymbol,
+                }),
+            });
         
-    } catch (error) {
-        if (error instanceof Error) {
-            console.error("Error fetching crypto data:", error.message);
-        } else {
-            console.error("Unknown error occurred while fetching crypto data");
+            const result = await response.json();
+
+            if (response.ok) {
+                const cryptoPriceMap = result.cryptoData.reduce((acc: Record<string, { id: string; current_price: number }>, crypto: { id: string; current_price: number }) => {
+                    acc[crypto.id] = crypto;
+                    return acc;
+                }, {});
+                
+                setData(prevData => prevData.map(item => {
+                    if (item.id && cryptoPriceMap[item.id]) {
+                        if (cryptoPriceMap[item.id].current_price != null) {
+                            return {
+                                ...item,
+                                price: `$${cryptoPriceMap[item.id].current_price.toFixed(2)}`
+                            };
+                        }
+                    }
+                    return {
+                        ...item,
+                    };
+                }));
+            } else {
+                console.error(`Failed to fetch data for crypto data:`, result.error);
+            }
+            
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error("Error fetching crypto data:", error.message);
+            } else {
+                console.error("Unknown error occurred while fetching crypto data");
+            }
+        } finally {
+            setIsLoading(false);
         }
-    } finally {
-        setIsLoading(false);
-    }
-};
+    };
 
     return (
         <section id="explore" className="explore bg-gray-900 min-h-screen flex flex-col items-center justify-center p-8 py-32 pt-46 ">
@@ -110,9 +137,9 @@ const Explore: React.FC = () => {
                                             />
                                             {row.asset}
                                         </td>
-                                        <td className="px-4 py-2">{isLoading ? 'Loading..' : row.price}</td>
-                                        <td className="px-4 py-2">{row.apy}</td>
-                                        <td className="px-4 py-2">{row.commission}</td>
+                                        <td className="px-4 py-2">{isLoading ? "Loading" : row.price ? row.price : "-"}</td>
+                                        <td className="px-4 py-2">{isLoading ? "Loading" : row.apy ? row.apy : "-"}</td>
+                                        <td className="px-4 py-2">{isLoading ? "Loading" : row.commission ? row.commission : "-"}</td>
                                         <td className="px-4 py-2">
                                             <span className="bg-gray-700 text-white text-xs font-semibold py-1 px-3 rounded-full">
                                                 {row.product}
