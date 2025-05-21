@@ -2,10 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 import { data } from "./data";
+import ExploreMobile from "./ExploreMobile";
 
 const Explore: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const cryptoDataFetched = useRef(false);
+
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+
+    if (isMobile) {
+        return <ExploreMobile />;
+    }
 
     useEffect(() => {
         if (cryptoDataFetched.current) {
@@ -86,7 +93,7 @@ const Explore: React.FC = () => {
                     </p>
                 </div>
                 <div className="bg-gray-800 text-white rounded-lg shadow-lg p-6">
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-auto md:overflow-x-visible">
                         <table className="table-auto w-full text-center text-gray-300">
                             <thead className="bg-gray-700 text-teal-400 text-lg justify-start">
                                 <tr>
