@@ -16,6 +16,7 @@ datasource db {
 
 model Token {
   id            String   @id @map("_id")
+  tableNo       Int      // The number of asset in table
   asset         String   // The token symbol (e.g., RON, NEAR)
   coinGeckoId   String   // The coingecko or other API id (e.g., ronin, near)
   cmcId         String?  // The coinmarketcap id (e.g., 1027)
