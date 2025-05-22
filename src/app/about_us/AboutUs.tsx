@@ -26,8 +26,8 @@ const AboutUs: React.FC = () => {
                         <Image
                             src="/Ignite-Neworkwhite.png"
                             alt="Profile"
-                            width={320} // set your preferred width
-                            height={320} // set your preferred height
+                            width={900} 
+                            height={800} 
                             className="rounded-full mb-4"
                             priority
                         />

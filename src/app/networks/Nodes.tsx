@@ -17,8 +17,8 @@ const Nodes: React.FC = () => {
                     We invest in and operate mining nodes to participate in the global network and promote the long-term growth of highly promising projects.
                 </div>
             </div>
-            <div className="flex justify-center w-full">
-                <div className="grid grid-cols-2 gap-x-8 gap-y-4" style={{ width: 420 }}>
+.            <div className="flex justify-center items-center w-full">
+                <div className="grid grid-cols-2 gap-x-8 gap-y-4 mx-auto" style={{ width: 420 }}>
                     {investedNodes.map((node) => (
                         <Link
                             key={node.id}

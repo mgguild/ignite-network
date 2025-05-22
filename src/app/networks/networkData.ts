@@ -7,4 +7,7 @@ export const networks = [
     { id: 6, name: 'Carv', symbol: 'CARV', logo: '/logos/Logo_Carv.png', link: 'https://play.carv.io/' },
     { id: 7, name: 'Sophon', symbol: 'SPN', logo: '/logos/sophon.jpg', link: 'https://sophon.xyz/' },
     { id: 8, name: 'Hychain', symbol: 'HYC', logo: '/logos/hychain.jpg', link: 'https://hychain.com/' },
+    { id: 9, name: 'IO', symbol: 'IO', logo: '/logos/io.jpg', link: 'https://io.net/' },
+    { id: 10, name: 'Massa', symbol: 'MASSA', logo: '/logos/massa.jpg', link: 'https://www.massa.net/' },
+    
 ];

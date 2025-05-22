@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import ExploreMobile from "./ExploreMobile";
 import Image from "next/image";
 
-
 interface CryptoData {
     id: string;
     asset: string;
@@ -113,7 +112,7 @@ const Explore: React.FC = () => {
     if (!hasMounted) return null;
 
     const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
-    if (isMobile) return <ExploreMobile />;
+    if (isMobile) return <ExploreMobile data={data} isLoading={isLoading} />;
 
     return (
         <section
