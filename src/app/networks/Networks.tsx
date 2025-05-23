@@ -24,7 +24,7 @@ const Networks: React.FC = () => {
                     </p>
                 </div>
                 {/* Grid Layout */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-20 justify-center">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-20 justify-items-center">
                     {networks.slice(0, 12).map((network) => (
                         <Link
                             key={network.id}
