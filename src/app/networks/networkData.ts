@@ -9,6 +9,5 @@ export const networks = [
     { id: 8, name: 'Hychain', symbol: 'HYC', logo: '/logos/hychain.jpg', link: 'https://hychain.com/' },
     { id: 9, name: 'IO', symbol: 'IO', logo: '/logos/io.jpg', link: 'https://io.net/' },
     { id: 10, name: 'Massa', symbol: 'MASSA', logo: '/logos/massa.jpg', link: 'https://www.massa.net/' },
-    { id: 11, name: 'Peaq', symbol: 'PEAQ', logo: '/logos/PEAQ.jpg', link: 'https://www.peaq.xyz/' },
-    
+    { id: 11, name: 'Peaq', symbol: 'PEAQ', logo: '/logos/PEAQ.jpg', link: 'https://www.peaq.xyz/' },    
 ];
