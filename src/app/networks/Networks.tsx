@@ -10,7 +10,7 @@ const Networks: React.FC = () => {
             id="networks"
             className="py-12 bg-[url('/tealll.png')] bg-cover bg-center bg-gray-50"
         >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-22">
+            <div className="max-w-7xl mx-auto px-4 sm:px-0 lg:px-8 py-22">
                 <div className="text-center mb-8">
                     {/* Gradient Text for Title */}
                     <h1 className="text-7xl font-bold bg-gradient-to-r from-black to-teal-500 bg-clip-text text-transparent">
@@ -24,23 +24,23 @@ const Networks: React.FC = () => {
                     </p>
                 </div>
                 {/* Grid Layout */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-20 justify-items-center">
                     {networks.slice(0, 12).map((network) => (
                         <Link
                             key={network.id}
                             href={network.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="bg-white shadow-md rounded-lg p-4 flex flex-col items-center text-center transition-transform transform hover:scale-105 hover:shadow-lg"
+                            className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center text-center transition-transform hover:scale-105 hover:shadow-lg w-full max-w-[270px] min-h-[180px]"
                         >
                             <Image
                                 src={network.logo}
                                 alt={`${network.name} logo`}
                                 width={64}
                                 height={64}
-                                className="w-16 h-auto mb-4"
+                                className="mb-4"
                             />
-                            <h3 className="text-lg font-semibold text-gray-900">{network.name}</h3>
+                            <h3 className="text-lg font-bold text-gray-900">{network.name}</h3>
                             <p className="text-sm text-gray-500">{network.symbol}</p>
                         </Link>
                     ))}

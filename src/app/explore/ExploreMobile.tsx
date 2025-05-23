@@ -25,7 +25,7 @@ const ExploreMobile: React.FC<ExploreMobileProps> = ({ data = [], isLoading }) =
     return (
         <section className="bg-gray-900 min-h-screen flex flex-col items-center justify-center p-4 pt-32 py-16">
             <div className="w-full max-w-md mx-auto">
-                <h2 className="text-3xl font-bold mb-4 text-teal text-center">Explore</h2>
+                <h2 className="text-5xl font-bold mb-4 text-teal text-center">Explore</h2>
                 <p className="text-gray-300 text-center mb-6 text-sm">
                     Ignite Network empowers users to participate in securing multiple blockchain while earning passive income. Explore a wide range of staking, nodes, and validator opportunities across top chains like NEAR and Ronin, among others.
                 </p>
