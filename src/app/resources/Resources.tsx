@@ -24,11 +24,6 @@ const Resources: React.FC = () => {
                 {/* Blog Posts */}
                 <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
                     <li className="relative bg-gray-800 bg-opacity-90 border border-gray-700 rounded-lg shadow-lg overflow-hidden hover:shadow-xl hover:scale-105 transition-transform">
-                        {/* <img
-                            src="/blog1.jpg" // Replace with your image path
-                            alt="Blog Post 1"
-                            className="w-full h-40 object-cover"
-                        /> */}
                         <div className="p-6">
                             <h3 className="text-xl font-semibold text-white mb-2">
                                 Navigating the Next Bull Run: Staking Strategies for Retail and Institutional Investors
@@ -36,20 +31,9 @@ const Resources: React.FC = () => {
                             <p className="text-gray-400 mb-4">
                                 An analysis of market trends and how staking can optimize your crypto portfolio.
                             </p>
-                            {/* <a
-                                href="#"
-                                className="text-teal-400 hover:text-teal-600 font-semibold"
-                            >
-                                Read More →
-                            </a> */}
                         </div>
                     </li>
                     <li className="relative bg-gray-800 bg-opacity-90 border border-gray-700 rounded-lg shadow-lg overflow-hidden hover:shadow-xl hover:scale-105 transition-transform">
-                        {/* <img
-                            src="/blog2.jpg" // Replace with your image path
-                            alt="Blog Post 2"
-                            className="w-full h-40 object-cover"
-                        /> */}
                         <div className="p-6">
                             <h3 className="text-xl font-semibold text-white mb-2">
                                 Under the Hood: How Ignite Achieves 99.9% Uptime
@@ -57,20 +41,9 @@ const Resources: React.FC = () => {
                             <p className="text-gray-400 mb-4">
                                 A technical look at our infrastructure and the security practices keeping your funds safe.
                             </p>
-                            {/* <a
-                                href="#"
-                                className="text-teal-400 hover:text-teal-600 font-semibold"
-                            >
-                                Read More →
-                            </a> */}
                         </div>
                     </li>
                     <li className="relative bg-gray-800 bg-opacity-90 border border-gray-700 rounded-lg shadow-lg overflow-hidden hover:shadow-xl hover:scale-105 transition-transform">
-                        {/* <img
-                            src="/blog3.jpg" // Replace with your image path
-                            alt="Blog Post 3"
-                            className="w-full h-40 object-cover"
-                        /> */}
                         <div className="p-6">
                             <h3 className="text-xl font-semibold text-white mb-2">
                                 Network Spotlight: Staking on NEAR vs. Ronin
@@ -78,12 +51,6 @@ const Resources: React.FC = () => {
                             <p className="text-gray-400 mb-4">
                                 Comparing opportunities, APYs, and tips for two of our most popular supported chains.
                             </p>
-                            {/* <a
-                                href="#"
-                                className="text-teal-400 hover:text-teal-600 font-semibold"
-                            >
-                                Read More →
-                            </a> */}
                         </div>
                     </li>
                 </ul>
