@@ -40,7 +40,7 @@ export default function Footer() {
                         </Link>
                         {/* Facebook Logo */}
                         <Link
-                            href="https://www.facebook.com/profile.php?id=61576739602771i"
+                            href="https://www.facebook.com/profile.php?id=61576739602771"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="block p-2 rounded"

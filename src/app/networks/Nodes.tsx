@@ -17,23 +17,22 @@ const Nodes: React.FC = () => {
                     We invest in and operate mining nodes to participate in the global network and promote the long-term growth of highly promising projects.
                 </div>
             </div>
-.            <div className="flex justify-center items-center w-full">
-                <div className="grid grid-cols-2 x-auto gap-2" style={{ width: 420 }}>
+            <div className="flex justify-center items-center w-full">
+                <div className="grid grid-cols-2 sm:grid-cols-2 gap-2 w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
                     {investedNodes.map((node) => (
                         <Link
                             key={node.id}
                             href={node.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="bg-white border border-teal-800 rounded-xl shadow-sm flex flex-col items-center justify-center transition-transform hover:scale-105"
-                            style={{ width: 190, height: 200 }}
+                            className="bg-white border border-teal-800 rounded-xl shadow-sm flex flex-col items-center justify-center transition-transform hover:scale-105 w-36 h-36 sm:w-44 sm:h-48"
                         >
                             <Image
                                 src={node.logo}
                                 alt={node.name}
-                                width={120}
-                                height={120}
-                                className="w-30 h-30 object-contain mb-2"
+                                width={80}
+                                height={80}
+                                className="w-20 h-20 sm:w-30 sm:h-30 object-contain mb-2"
                             />
                             <span className="text-teal-800 font-semibold text-xs text-center break-words">{node.name}</span>
                         </Link>
