@@ -24,8 +24,8 @@ const Networks: React.FC = () => {
                     </p>
                 </div>
                 {/* Grid Layout */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-20 justify-items-center">
-                    {networks.slice(0, 12).map((network) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 justify-items-center">
+                    {networks.slice(0, 8).map((network) => (
                         <Link
                             key={network.id}
                             href={network.link}
@@ -45,6 +45,27 @@ const Networks: React.FC = () => {
                         </Link>
                     ))}
                 </div>
+                <div className="flex justify-center gap-4 sm:gap-8 mb-20 flex-wrap">
+                        {networks.slice(8, 11).map((network) => (
+                            <Link
+                                key={network.id}
+                                href={network.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center text-center transition-transform hover:scale-105 hover:shadow-lg w-full max-w-[270px] min-h-[180px]"
+                            >
+                                <Image
+                                    src={network.logo}
+                                    alt={`${network.name} logo`}
+                                    width={64}
+                                    height={64}
+                                    className="mb-4"
+                                />
+                                <h3 className="text-2xl font-bold text-gray-900">{network.name}</h3>
+                                <p className="text-base text-gray-500">{network.symbol}</p>
+                            </Link>
+                        ))}
+                    </div>
                 <div className="text-center mt-8">
                     {/* Optional Button */}
                     {/* <button className="text-red-600 font-semibold hover:underline">

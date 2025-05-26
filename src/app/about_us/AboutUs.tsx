@@ -15,7 +15,7 @@ const AboutUs: React.FC = () => {
 
             {/* Content */}
             <div className="relative max-w-7xl mx-auto px-4">
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center justify-center sm:justify-between mb-8">
                     {/* About Text */}
                     <h2 className="text-7xl font-bold text-center text-teal-500">About Us</h2>
                 </div>
