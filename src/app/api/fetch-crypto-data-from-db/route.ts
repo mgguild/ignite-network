@@ -9,6 +9,8 @@ interface CacheEntry {
 const cache: Record<string, CacheEntry> = {};
 const CACHE_REFRESH = 60 * 60 * 1000 // 1 hour refresh threshold
 
+const enableCaching = true;
+
 const prisma = new PrismaClient();
 
 async function fetchTokenData(cacheKey: string, filter?: Record<string, unknown>) {
@@ -16,7 +18,7 @@ async function fetchTokenData(cacheKey: string, filter?: Record<string, unknown>
     const cacheEntry = cache[cacheKey];
     const now = Date.now();
     
-    if (cacheEntry && (now - cacheEntry.timestamp < CACHE_REFRESH)) {
+    if (cacheEntry && (now - cacheEntry.timestamp < CACHE_REFRESH) && enableCaching) {
       console.log('Returning cached token data (less than 1 hour old)');
       return { data: cacheEntry.data };
     }
@@ -24,8 +26,20 @@ async function fetchTokenData(cacheKey: string, filter?: Record<string, unknown>
     console.log('Cache missing or older than 15 minutes - fetching fresh token data');
     
     const tokens = filter
-      ? await prisma.token.findMany({ where: filter })
-      : await prisma.token.findMany();
+  ? await prisma.token.findMany({ 
+      where: filter,
+      orderBy: [
+        { tableNo: 'asc' }
+      ]
+    })
+  : await prisma.token.findMany({
+      orderBy: [
+        { tableNo: 'asc' }
+      ]
+    });
+
+    console.log(`Fetched ${tokens.length} tokens from the database`);
+    console.log('Token data:', tokens);
     
     // Store in cache
     cache[cacheKey] = {
